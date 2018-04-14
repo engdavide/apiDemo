@@ -2,14 +2,21 @@ const express = require('express');
 const request = require('request');
 
 const app = express();
+app.set("view engine", "ejs");
+
+app.get("/", function(req, res){
+    res.render("search");
+});
 
 app.get("/results", function(req, res){
-   request("http://www.omdbapi.com/?s=starwars&apikey=thewdb", function(error, response, body){
+    let query = req.query.search;
+    let url = "http://www.omdbapi.com/?s=" + query + "&apikey=thewdb";
+   request(url, function(error, response, body){
        if(!error && response.statusCode ==200){
-           let results = JSON.parse(body);
-           res.send(results["Search"][0]["Title"]);
+           let data = JSON.parse(body);
+           res.render("results", {data: data});
        }
-   }) 
+   }) ;
 });
 
 
