@@ -1,9 +1,21 @@
-const express = require('express')
-const request = require('request')
+const express = require('express');
+const request = require('request');
+
+const app = express();
+
+app.get("/results", function(req, res){
+   request("http://www.omdbapi.com/?s=starwars&apikey=thewdb", function(error, response, body){
+       if(!error && response.statusCode ==200){
+           let results = JSON.parse(body);
+           res.send(results["Search"][0]["Title"]);
+       }
+   }) 
+});
 
 
-
-
+app.listen(process.env.PORT, process.env.IP, function(){
+    console.log("Movie app is live!!");
+});
 
 // new folder mkdir, cd into folder
 // npm init   setup package.json
